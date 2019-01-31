@@ -384,7 +384,7 @@ F 1 "GND" H 7055 1327 50  0000 C CNN
 F 2 "" H 7050 1500 50  0001 C CNN
 F 3 "" H 7050 1500 50  0001 C CNN
 	1    7050 1500
-	0    -1   -1   0   
+	0    -1   1    0   
 $EndComp
 Wire Wire Line
 	7050 1500 6950 1500
@@ -428,4 +428,36 @@ Wire Wire Line
 	2550 4000 2650 4000
 Wire Wire Line
 	2650 4100 2550 4100
+$Comp
+L Switch:SW_SPST SW?
+U 1 1 5C53582E
+P 6200 4350
+F 0 "SW?" H 6200 4585 50  0000 C CNN
+F 1 "SW_SPST" H 6200 4494 50  0000 C CNN
+F 2 "" H 6200 4350 50  0001 C CNN
+F 3 "" H 6200 4350 50  0001 C CNN
+	1    6200 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5C53712D
+P 6500 4350
+F 0 "#PWR?" H 6500 4100 50  0001 C CNN
+F 1 "GND" V 6505 4177 50  0000 C CNN
+F 2 "" H 6500 4350 50  0001 C CNN
+F 3 "" H 6500 4350 50  0001 C CNN
+	1    6500 4350
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6500 4350 6400 4350
+Text GLabel 5900 4350 0    50   Output ~ 0
+Go_Button
+Wire Wire Line
+	5900 4350 6000 4350
+Text GLabel 4250 1900 0    50   Input ~ 0
+Go_Button
+Wire Wire Line
+	4250 1900 4350 1900
 $EndSCHEMATC
