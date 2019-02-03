@@ -17,12 +17,12 @@ $EndDescr
 $Comp
 L go-baby-go:TG-3 U1
 U 1 1 5C50C683
-P 1850 2200
-F 0 "U1" H 1981 3165 50  0000 C CNN
-F 1 "TG-3" H 1981 3074 50  0000 C CNN
-F 2 "" H 1750 2100 50  0001 C CNN
-F 3 "" H 1750 2100 50  0001 C CNN
-	1    1850 2200
+P 1650 2200
+F 0 "U1" H 1781 3165 50  0000 C CNN
+F 1 "TG-3" H 1781 3074 50  0000 C CNN
+F 2 "" H 1550 2100 50  0001 C CNN
+F 3 "" H 1550 2100 50  0001 C CNN
+	1    1650 2200
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -36,12 +36,12 @@ F 3 "https://www.arduino.cc/en/Main/arduinoBoardUno" H 4350 3250 50  0001 C CNN
 	1    4550 2200
 	-1   0    0    -1  
 $EndComp
-Text GLabel 2750 2300 2    50   Output ~ 0
-Throttle
+Text GLabel 2550 2300 2    50   Output ~ 0
+Throttle_Radio
 Text GLabel 3900 2200 0    50   Input ~ 0
-Throttle
+Throttle_Radio
 Wire Wire Line
-	2550 2300 2750 2300
+	2350 2300 2550 2300
 Wire Wire Line
 	4050 2200 3900 2200
 $Comp
@@ -124,16 +124,16 @@ Wire Wire Line
 $Comp
 L power:GND #PWR01
 U 1 1 5C5103B5
-P 2700 1700
-F 0 "#PWR01" H 2700 1450 50  0001 C CNN
-F 1 "GND" V 2705 1572 50  0000 R CNN
-F 2 "" H 2700 1700 50  0001 C CNN
-F 3 "" H 2700 1700 50  0001 C CNN
-	1    2700 1700
+P 2500 1700
+F 0 "#PWR01" H 2500 1450 50  0001 C CNN
+F 1 "GND" V 2505 1572 50  0000 R CNN
+F 2 "" H 2500 1700 50  0001 C CNN
+F 3 "" H 2500 1700 50  0001 C CNN
+	1    2500 1700
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	2550 1700 2700 1700
+	2350 1700 2500 1700
 $Comp
 L go-baby-go:QuikcRun_860-Dual U2
 U 1 1 5C510BD4
@@ -146,9 +146,9 @@ F 3 "" H 1150 4450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 2700 4950 2    50   Input ~ 0
-Go_Control
+Go_Motor_Control
 Text GLabel 5150 2500 2    50   Output ~ 0
-Go_Control
+Go_Motor_Control
 Wire Wire Line
 	2700 4950 2550 4950
 $Comp
@@ -166,13 +166,13 @@ Wire Wire Line
 	2550 5150 2700 5150
 Text GLabel 2700 5050 2    50   Output ~ 0
 VCC
-Text GLabel 2750 1600 2    50   Input ~ 0
+Text GLabel 2550 1600 2    50   Input ~ 0
 VCC
 Wire Wire Line
 	2550 5050 2700 5050
 Wire Wire Line
-	2750 1600 2550 1600
-NoConn ~ 2550 1500
+	2550 1600 2350 1600
+NoConn ~ 2350 1500
 Text GLabel 4650 1100 1    50   Input ~ 0
 VCC
 Wire Wire Line
@@ -244,7 +244,7 @@ Wire Wire Line
 Wire Wire Line
 	2650 4700 2550 4700
 $Comp
-L Device:Battery BT1
+L go-baby-go:Battery BT1
 U 1 1 5C5160E0
 P 4500 4350
 F 0 "BT1" H 4608 4396 50  0000 L CNN
@@ -267,10 +267,10 @@ F 3 "" H 1850 6050 50  0001 C CNN
 $EndComp
 Text GLabel 3050 6500 2    50   Input ~ 0
 Steering
-Text GLabel 2750 2700 2    50   Output ~ 0
+Text GLabel 2550 2700 2    50   Output ~ 0
 Steering
 Wire Wire Line
-	2750 2700 2550 2700
+	2550 2700 2350 2700
 Wire Wire Line
 	3050 6500 2900 6500
 $Comp
@@ -289,9 +289,9 @@ Wire Wire Line
 Text GLabel 4500 4050 1    50   Output ~ 0
 12V
 Text GLabel 1450 6500 0    50   Output ~ 0
-M3Y
+M3_Black
 Text GLabel 1450 6600 0    50   Output ~ 0
-M3B
+M3_Red
 Wire Wire Line
 	1450 6500 1600 6500
 Wire Wire Line
@@ -308,21 +308,15 @@ F 3 "~" H 8050 5000 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 Text GLabel 1450 6300 0    50   Output ~ 0
-SPOT_REF+
+M3_White
 Text GLabel 1450 6700 0    50   Output ~ 0
-SPOT_REF-
+M3_Yellow
 Text GLabel 1450 6400 0    50   Input ~ 0
-SPOT
+M3_Blue
 Wire Wire Line
 	1450 6400 1600 6400
 Wire Wire Line
 	1450 6700 1600 6700
-Text GLabel 8050 5250 3    50   Input ~ 0
-SPOT_REF-
-Text GLabel 8050 4750 1    50   Input ~ 0
-SPOT_REF-
-Text GLabel 7800 5000 0    50   Output ~ 0
-SPOT
 Wire Wire Line
 	7800 5000 7900 5000
 $Comp
@@ -341,9 +335,9 @@ Wire Wire Line
 Wire Wire Line
 	8050 4750 8050 4850
 Text GLabel 8950 4600 1    50   Input ~ 0
-M3Y
+M3_Red
 Text GLabel 8950 5400 3    50   Input ~ 0
-M3B
+M3_Black
 Wire Wire Line
 	8950 5250 8950 5400
 Wire Wire Line
@@ -391,20 +385,16 @@ Wire Wire Line
 $Comp
 L power:GND #PWR0101
 U 1 1 5C559090
-P 4500 4650
-F 0 "#PWR0101" H 4500 4400 50  0001 C CNN
-F 1 "GND" V 4505 4477 50  0000 C CNN
-F 2 "" H 4500 4650 50  0001 C CNN
-F 3 "" H 4500 4650 50  0001 C CNN
-	1    4500 4650
+P 4500 4600
+F 0 "#PWR0101" H 4500 4350 50  0001 C CNN
+F 1 "GND" V 4505 4427 50  0000 C CNN
+F 2 "" H 4500 4600 50  0001 C CNN
+F 3 "" H 4500 4600 50  0001 C CNN
+	1    4500 4600
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4500 4050 4500 4150
-Wire Wire Line
-	4500 4650 4500 4550
-Text GLabel 2650 4000 2    50   Input ~ 0
-12V
+	4500 4600 4500 4550
 $Comp
 L power:GND #PWR0102
 U 1 1 5C566702
@@ -417,39 +407,37 @@ F 3 "" H 2650 4100 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	2550 4000 2650 4000
-Wire Wire Line
 	2650 4100 2550 4100
 $Comp
 L Switch:SW_SPST SW2
 U 1 1 5C53582E
-P 6200 4350
-F 0 "SW2" H 6200 4585 50  0000 C CNN
-F 1 "SW_SPST" H 6200 4494 50  0000 C CNN
-F 2 "" H 6200 4350 50  0001 C CNN
-F 3 "" H 6200 4350 50  0001 C CNN
-	1    6200 4350
+P 6650 4150
+F 0 "SW2" H 6650 4385 50  0000 C CNN
+F 1 "SW_SPST" H 6650 4294 50  0000 C CNN
+F 2 "" H 6650 4150 50  0001 C CNN
+F 3 "" H 6650 4150 50  0001 C CNN
+	1    6650 4150
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0103
 U 1 1 5C53712D
-P 6500 4350
-F 0 "#PWR0103" H 6500 4100 50  0001 C CNN
-F 1 "GND" V 6505 4177 50  0000 C CNN
-F 2 "" H 6500 4350 50  0001 C CNN
-F 3 "" H 6500 4350 50  0001 C CNN
-	1    6500 4350
+P 6950 4150
+F 0 "#PWR0103" H 6950 3900 50  0001 C CNN
+F 1 "GND" V 6955 3977 50  0000 C CNN
+F 2 "" H 6950 4150 50  0001 C CNN
+F 3 "" H 6950 4150 50  0001 C CNN
+	1    6950 4150
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	6500 4350 6400 4350
-Text GLabel 5900 4350 0    50   Output ~ 0
-Go_Button
+	6950 4150 6850 4150
+Text GLabel 6350 4150 0    50   Output ~ 0
+Big_Blue_Go_Button
 Wire Wire Line
-	5900 4350 6000 4350
+	6350 4150 6450 4150
 Text GLabel 5150 1900 2    50   Input ~ 0
-Go_Button
+Big_Blue_Go_Button
 Wire Wire Line
 	5150 1900 5050 1900
 Wire Wire Line
@@ -603,18 +591,30 @@ NoConn ~ 4050 2900
 NoConn ~ 4050 2700
 NoConn ~ 4050 2600
 NoConn ~ 4050 2500
-NoConn ~ 2550 1900
-NoConn ~ 2550 2000
-NoConn ~ 2550 2100
-NoConn ~ 2550 2400
-NoConn ~ 2550 2500
-NoConn ~ 2550 2800
-NoConn ~ 2550 2900
+NoConn ~ 2350 1900
+NoConn ~ 2350 2000
+NoConn ~ 2350 2100
+NoConn ~ 2350 2400
+NoConn ~ 2350 2500
+NoConn ~ 2350 2800
+NoConn ~ 2350 2900
 NoConn ~ 7200 1350
-Text GLabel 3050 6400 2    50   Output ~ 0
+Text GLabel 3050 6400 2    50   Input ~ 0
 12V
 Wire Wire Line
 	2900 6400 3050 6400
 Wire Wire Line
 	1450 6300 1600 6300
+Text GLabel 8050 4750 1    50   Input ~ 0
+M3_White
+Text GLabel 8050 5250 3    50   Input ~ 0
+M3_Yellow
+Text GLabel 7800 5000 0    50   Output ~ 0
+M3_Blue
+Wire Wire Line
+	4500 4050 4500 4150
+Text GLabel 2650 4000 2    50   Input ~ 0
+12V
+Wire Wire Line
+	2550 4000 2650 4000
 $EndSCHEMATC
