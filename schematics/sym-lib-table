@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name go-baby-go)(type Legacy)(uri ${KIPRJMOD}/go-baby-go.lib)(options "")(descr ""))
+)
