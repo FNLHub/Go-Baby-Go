@@ -8,9 +8,10 @@ int timerID;
 
 // Pin Alocations
 const int throttle = 2;
-const int modeSelect = 3;
 const int BBButton = 4;
 const int motor = 5;
+const int BBB_mode = 6;
+const int remote_mode = 7;
 
 const int A_Max_Speed = 0;
 
@@ -19,7 +20,10 @@ volatile int radio_pwm_value = 0;
 volatile int radio_prev_time = 0;
 
 // Used to store potentiometer values
-volatile int Max_Speed_Value = 0;
+volatile double Max_Speed_Value = 0;
+
+// Stores max speed from Acceleration Table Lookup
+int maxSpeedIterator = 0;
 
 // Acceleration and deceleration intervals
 const int Acceleration_Speed_Value = 400;
@@ -27,6 +31,8 @@ const int Deceleraation_Speed_Value = 100;
 
 // Stores BBButton State
 int BBButtonState = 0;
+int BBB_mode_state = 0;
+int remote_mode_state = 0;
 
 // Used to keep track of steps on acceleration curve
 int accelerationIterator = 0;
@@ -36,12 +42,12 @@ void setup()
 {
  // Instantiation of Pins
  attachInterrupt(0, Radio_PWM_Rising, RISING); // 0 in this function means PIN 2
- pinMode(modeSelect, INPUT);
+ pinMode(BBB_mode, INPUT);
+ pinMode(remote_mode, INPUT);
  pinMode(BBButton, INPUT);
  MotorController.attach(motor); // Attach Servo Library to motor pin
  
  pinMode(A_Max_Speed, INPUT);
- pinMode(A_Acceleration_Speed, INPUT);
 
  timerID = t.setInterval(1000, accelerationCurve);
  
@@ -50,12 +56,20 @@ void setup()
 
 void loop()
 {
-  // modeSelect == HIGH; fully remote control (No Big Blue Button)
-  // modeSelect == LOW; Big Blue Button Throttle control
-  //if ( modeSelect == HIGH){
+  // Get current value of mode select switch
+  BBB_mode_state = digitalRead(BBB_mode);
+  remote_mode_state = digitalRead(remote_mode);
+
+  // Get value from Max Speed Potentiometer and convert it to an Acceleration Table iterator limit
+  getMaxSpeedIterator();
+  
+  // BBB_mode == HIGH && remote_mode == LOW; Fully remote control (No Big Blue Button)
+  // BBB_mode == LOW && remote_mode == HIGH; Big Blue Button Throttle control
+  // BBB_mode == LOW && remote_mode == LOW; Diagnostic Mode
+  if ( BBB_mode == HIGH && remote_mode == LOW){
     // Directly pass input from radio to Motor Controller
-  //  MotorController.write(calculateLinearAcceleration(radio_pwm_value));
-  //} else {
+    MotorController.write(calculateLinearAcceleration(radio_pwm_value));
+  } else if (BBB_mode == LOW && remote_mode == HIGH) {
     // Use acceleration curve to gradually increase speed over time
     Serial.println(radio_pwm_value);
     if (radio_pwm_value < 1400){
@@ -63,7 +77,25 @@ void loop()
     } else {
       decelerate();
     }
-  //}
+  } else if ( BBB_mode == LOW && remote_mode == LOW) {
+    // Print out all variables to serial to see live output
+    DiagnosticMode();
+  } else {
+    Serial.println("Mode Select Error! Check Mode Switch!");
+  }
+}
+
+// Read the max Speed potentiometer and return its corresponding value in the AccelerationTable.
+void getMaxSpeedIterator(){
+
+  Max_Speed_Value = analogRead((A_Max_Speed/1023.0));
+  
+  maxSpeedIterator = round(Max_Speed_Value*44);
+}
+
+// Outputs to Motor Controller using modified servo library
+void writeToMotorController(int speedVal){
+    MotorController.write(speedVal);
 }
 
 
@@ -71,7 +103,6 @@ void loop()
 void accelerationCurve()
 {
   BBButtonState = digitalRead(BBButton);
-  //Serial.println(BBButtonState);
   
   // BBButtonState == HIGH; iterate up though acceleration table until end then maintain speed
   // BBButtonState == LOW; iterate down through acceleration table until stop then maintain speed
@@ -83,17 +114,15 @@ void accelerationCurve()
   {
     decelerate();
   } 
-
 }
 
 void accelerate(){
   // Bounds check to verify iterator doesn't exceed the bounds of the array
-    if (accelerationIterator < sizeof(accelerationTable)){
-      if (accelerationIterator < 44){
+    if (accelerationIterator <= 44){
+      if (accelerationIterator < maxSpeedIterator){
         accelerationIterator += 1;
       }
-      //Serial.println(accelerationTable[accelerationIterator]);
-      MotorController.write(accelerationTable[accelerationIterator]);
+      writeToMotorController(accelerationTable[accelerationIterator]);
       t.deleteTimer(timerID);
       timerID = t.setInterval(Acceleration_Speed_Value, accelerationCurve);
     } else {
@@ -106,8 +135,7 @@ void decelerate(){
       if (accelerationIterator >= 1){
         accelerationIterator -= 1;
       }
-      MotorController.write(accelerationTable[accelerationIterator]);
-      //Serial.println(accelerationTable[accelerationIterator]);
+      writeToMotorController(accelerationTable[accelerationIterator]);
       t.deleteTimer(timerID);
       timerID = t.setInterval(Deceleraation_Speed_Value, accelerationCurve);
     } else {
@@ -133,4 +161,24 @@ void Radio_PWM_Rising(){
 void Radio_PWM_Falling(){
   attachInterrupt(0, Radio_PWM_Rising, RISING);
   radio_pwm_value = micros()-radio_prev_time;
+}
+
+void DiagnosticMode(){
+
+  // Get current value of BBButton
+  BBButtonState = digitalRead(BBButton);
+
+  Serial.println("Diagnostic Mode");
+  Serial.println("Remote Control Mode Settings:");
+  Serial.println("-------------------------------------");
+  Serial.println("Throttle Value from radio: " + radio_pwm_value);
+  Serial.println("LinearAcceleration Conversion Value: " + String(calculateLinearAcceleration(radio_pwm_value)));
+  Serial.println("-------------------------------------");
+  Serial.println("Semi-Remote Control Mode Settings:");
+  Serial.println("-------------------------------------");
+  Serial.println("Child Throttle Button Value: " + BBButtonState);
+  Serial.println("Max Speed Value: " + String(accelerationTable[maxSpeedIterator]));
+  Serial.println("Acceleration delay in miliseconds between steps: " + Acceleration_Speed_Value);
+  Serial.println("Deceleration delay in miliseconds between steps: " + Deceleraation_Speed_Value);
+  Serial.println("-------------------------------------");
 }
